@@ -18,7 +18,8 @@ public final class Application
 
     public Application(final String context, final String applicationState, final String activeSessions, final String name)
     {
-        this.context = context;
+        System.setProperty("jsse.enableSNIExtension", "false");
+    	this.context = context;
         this.applicationState = ApplicationState.valueOf(applicationState.toUpperCase());
         this.activeSessions = Integer.parseInt(activeSessions);
         this.name = name;

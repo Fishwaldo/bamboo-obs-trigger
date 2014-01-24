@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import java.util.Collections;
 import java.util.Set;
 
-public class SingleOperationTaskConfigurator extends AbstractTomcatConfigurator
+public class SingleOperationTaskConfigurator extends AbstractOBSConfigurator
 {
     private static final Logger log = Logger.getLogger(SingleOperationTaskConfigurator.class);
 

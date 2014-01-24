@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.Set;
 
-public class DeployAppConfigurator extends AbstractTomcatConfigurator
+public class DeployAppConfigurator extends AbstractOBSConfigurator
 {
     private static final Logger log = Logger.getLogger(DeployAppConfigurator.class);
     // ------------------------------------------------------------------------------------------------------- Constants

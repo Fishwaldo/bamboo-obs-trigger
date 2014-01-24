@@ -1,11 +1,17 @@
 package ac.dynam.bamboo.plugins.obstrigger.manager;
 
+import java.io.StringReader;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.xml.sax.InputSource;
 
-public final class TomcatResult
+public final class OBSResult
 {
-    private static final Logger log = Logger.getLogger(TomcatResult.class);
+    //private static final java.util.logging.Logger log = Logger.getLogger(TomcatResult.class);
     // ------------------------------------------------------------------------------------------------------- Constants
     // ------------------------------------------------------------------------------------------------- Type Properties
 
@@ -15,7 +21,7 @@ public final class TomcatResult
     // ---------------------------------------------------------------------------------------------------- Dependencies
     // ---------------------------------------------------------------------------------------------------- Constructors
 
-    public TomcatResult(final boolean successful, final String reason)
+    public OBSResult(final boolean successful, final String reason)
     {
         this.successful = successful;
         this.reason = reason;
@@ -36,16 +42,32 @@ public final class TomcatResult
     }
 
     @NotNull
-    public static TomcatResult parse(@NotNull String line)
+    public static OBSResult parse(@NotNull String line)
     {
-        if (line.startsWith("OK"))
-        {
-            return new TomcatResult(true, line);
-        }
-        else
-        {
-            return new TomcatResult(false, line);
-        }
+    	
+    	try {
+	    	XPathFactory xpathFactory = XPathFactory.newInstance();
+	    	XPath xpath = xpathFactory.newXPath();
+	
+	    	InputSource source = new InputSource(new StringReader(
+	    	    line));
+	    	String status = xpath.evaluate("/status/@code", source);
+	
+	    	//log.warning("satus=" + status);
+	    	
+	    	
+	    	
+	    	if (status.startsWith("ok"))
+	        {
+	            return new OBSResult(true, line);
+	        }
+	        else
+	        {
+	            return new OBSResult(false, line);
+	        }
+    	} catch (Exception ex) {
+    		return new OBSResult(false, ex.getMessage());
+    	}
     }
 
     // -------------------------------------------------------------------------------------- Basic Accessors / Mutators

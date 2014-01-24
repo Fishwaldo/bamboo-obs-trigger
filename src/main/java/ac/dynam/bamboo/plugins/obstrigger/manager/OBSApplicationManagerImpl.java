@@ -1,7 +1,8 @@
 package ac.dynam.bamboo.plugins.obstrigger.manager;
 
-import ac.dynam.bamboo.plugins.obstrigger.configuration.AbstractTomcatConfigurator;
+import ac.dynam.bamboo.plugins.obstrigger.configuration.AbstractOBSConfigurator;
 import ac.dynam.bamboo.plugins.obstrigger.manager.EasySSLProtocolSocketFactory;
+import ac.dynam.bamboo.plugins.obstrigger.manager.OBSResult;
 
 import com.atlassian.bamboo.task.CommonTaskContext;
 import com.atlassian.bamboo.task.TaskException;
@@ -17,27 +18,33 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.xml.sax.InputSource;
+
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
-public class TomcatApplicationManagerImpl implements TomcatApplicationManager
+public class OBSApplicationManagerImpl implements OBSApplicationManager
 {
-    private static final Logger log = Logger.getLogger(TomcatApplicationManagerImpl.class);
+    private static final Logger log = Logger.getLogger(OBSApplicationManagerImpl.class);
 
     // ------------------------------------------------------------------------------------------------------- Constants
     // ------------------------------------------------------------------------------------------------- Type Properties
@@ -50,7 +57,7 @@ public class TomcatApplicationManagerImpl implements TomcatApplicationManager
     // ---------------------------------------------------------------------------------------------------- Dependencies
     // ---------------------------------------------------------------------------------------------------- Constructors
 
-    public TomcatApplicationManagerImpl(@NotNull TomcatConnection tomcatCredentials, @NotNull CommonTaskContext taskContext, @NotNull final CustomVariableContext customVariableContext) throws TaskException
+    public OBSApplicationManagerImpl(@NotNull OBSConnection tomcatCredentials, @NotNull CommonTaskContext taskContext, @NotNull final CustomVariableContext customVariableContext) throws TaskException
     {
         this.customVariableContext = customVariableContext;
         try
@@ -72,21 +79,23 @@ public class TomcatApplicationManagerImpl implements TomcatApplicationManager
 
     @NotNull
     @Override
-    public TomcatResult deployApplication(@NotNull final String pkg, @NotNull final String prj) throws IOException
+    public OBSResult deployApplication(@NotNull final String pkg, @NotNull final String prj) throws IOException
     {
 
         try
         {
             final String url = new StringBuilder(obsapiUrl)
-                    .append("/package/execute_services?package=")
+                    .append("/source/")
+                    .append(encode(customVariableContext.substituteString(prj)))
+                    .append("/")
                     .append(encode(customVariableContext.substituteString(pkg)))
-                    .append("&project=")
-                    .append(encode(customVariableContext.substituteString(prj))).toString();
+                    .append("?cmd=runservice")
+                    .toString();
 
-            final PutMethod putMethod = new PutMethod(url);
+            final PostMethod postMethod = new PostMethod(url);
             //putMethod.setRequestEntity(new InputStreamRequestEntity(inputStream, file.length()));
-            final String result = execute(putMethod);
-            return TomcatResult.parse(result);
+            final String result = execute(postMethod);
+            return OBSResult.parse(result);
         }
         finally {
             //IOUtils.closeQuietly(inputStream);
@@ -102,6 +111,7 @@ public class TomcatApplicationManagerImpl implements TomcatApplicationManager
     {
         try
         {
+        	log.warn("Starting");
             httpMethod.setDoAuthentication(true);
             httpMethod.addRequestHeader("User-Agent", "Atlassian OBS API");
             httpMethod.getHostAuthState().isPreemptive();
@@ -118,7 +128,30 @@ public class TomcatApplicationManagerImpl implements TomcatApplicationManager
                 {
                     throw new IOException("Could not connect to OBS API at '" + httpMethod.getURI() + "' because the username and password provided is not authorized.");
                 }
-                throw new IOException("Could not connect to OBS API at '" + httpMethod.getURI() + "'. Response code: " + status);
+//            	try {
+        	    	XPathFactory xpathFactory = XPathFactory.newInstance();
+        	    	XPath xpath = xpathFactory.newXPath();
+        	
+        	    	InputSource source = new InputSource(new StringReader(httpMethod.getResponseBodyAsString()));
+        	    	log.warn("Got a Weird Return:" + httpMethod.getResponseBodyAsString());
+        	    	String statuscode;
+        	    	try {
+        	    		statuscode = xpath.evaluate("/status/@code", source);
+        	    	} catch (Exception ex) {
+        	    		throw new IOException("Can't Parse Response Code");
+        	    	}
+        	    	log.error("Status:" + statuscode);
+        	    	if (statuscode.startsWith("not_found"))
+        	        {
+            	    	throw new IOException("OBS Reported a Error:" + httpMethod.getResponseBodyAsString());
+        	        }
+        	        else
+        	        {
+                        throw new IOException("Could not connect to OBS API at '" + httpMethod.getURI() + "'. Response code: " + status);
+        	        }
+  //          	} catch (Exception ex) {
+  //          		throw ex;
+  //          	}
             }
         }
         finally

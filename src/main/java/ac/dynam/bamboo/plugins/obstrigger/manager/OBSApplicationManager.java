@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Provides access to the Tomcat Application Manager of a single Tomcat server.
  */
-public interface TomcatApplicationManager
+public interface OBSApplicationManager
 {
     /**
      * Deploys a Tomcat application at the give context path
@@ -19,5 +19,5 @@ public interface TomcatApplicationManager
      * @throws IOException
      */
     @NotNull
-    TomcatResult deployApplication(@NotNull String pkg, @NotNull String prj) throws IOException;
+    OBSResult deployApplication(@NotNull String pkg, @NotNull String prj) throws IOException;
 }

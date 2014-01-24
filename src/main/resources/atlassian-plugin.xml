@@ -13,14 +13,14 @@
 
   <resource type="i18n" name="ac.dynam.bamboo.plugins.obstrigger.i18n" location="ac.dynam.bamboo.plugins.obstrigger.i18n"/>
 
-  <taskType key="TriggerBuild" name="Trigger Build" class="ac.dynam.bamboo.plugins.obstrigger.tasks.TriggerBuild">
-    <description>Triggers a OBS Build</description>
+  <taskType key="TriggerBuild" name="Trigger OBS Service" class="ac.dynam.bamboo.plugins.obstrigger.tasks.TriggerBuild">
+    <description>Triggers a OBS Service Run</description>
     <category name="deployment"/>
     <configuration class="ac.dynam.bamboo.plugins.obstrigger.configuration.DeployAppConfigurator"/>
     <resource type="freemarker" name="edit" location="ac/dynam/bamboo/plugins/obstrigger/editDeployApp.ftl"/>
     <resource type="freemarker" name="view" location="ac/dynam/bamboo/plugins/obstrigger/viewDeployApp.ftl"/>
-    <resource type="download" name="icon" location="ac/dynam/bamboo/plugins/obstrigger/tomcat.png"/>
-    <help key="obstrigger.task.help" />
+    <resource type="download" name="icon" location="ac/dynam/bamboo/plugins/obstrigger/obs.gif"/>
+    <!-- <help key="obstrigger.task.help" /> -->
   </taskType>
 
 <!--  <component key="passwordUpgradeTask" name="Password Encryption Upgrade Task" class="ac.dynam.bamboo.plugins.tomcat.upgrade.PasswordUpgradeTask" public="true">

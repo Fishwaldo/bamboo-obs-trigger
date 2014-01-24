@@ -18,9 +18,9 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractTomcatConfigurator extends AbstractTaskConfigurator
+public abstract class AbstractOBSConfigurator extends AbstractTaskConfigurator
 {
-    private static final Logger log = Logger.getLogger(AbstractTomcatConfigurator.class);
+    private static final Logger log = Logger.getLogger(AbstractOBSConfigurator.class);
     // ------------------------------------------------------------------------------------------------------- Constants
     public static final String OBS_URL = "obsUrl";
     public static final String OBS_USERNAME = "obsUsername";
@@ -34,7 +34,8 @@ public abstract class AbstractTomcatConfigurator extends AbstractTaskConfigurato
     private static final Set<String> FIELDS_TO_COPY = ImmutableSet.<String>builder().add(OBS_URL,
                                                                                          OBS_USERNAME,
                                                                                          OBS_PACKAGE,
-                                                                                         OBS_PROJECT).build();
+                                                                                         OBS_PROJECT,
+                                                                                         OBS_PLAIN_PASSWORD,OBS_PASSWORD).build();
     private static final String PASSWORD_CHANGE = "passwordChange";
 
     // ------------------------------------------------------------------------------------------------- Type Properties
@@ -50,8 +51,8 @@ public abstract class AbstractTomcatConfigurator extends AbstractTaskConfigurato
     public void populateContextForCreate(@NotNull final Map<String, Object> context)
     {
         super.populateContextForCreate(context);
-        context.put(OBS_URL, "https://obs.dmz.dynam.ac:444/about");
-        context.put(OBS_USERNAME, "admin");
+        context.put(OBS_URL, "https://api.opensuse.org/");
+        //context.put(OBS_USERNAME, "admin");
         //context.put(APP_CONTEXT, "/test");
     }
 

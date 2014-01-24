@@ -6,9 +6,9 @@ import com.atlassian.bamboo.task.CommonTaskContext;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-public class TaskTomcatConnection implements TomcatConnection
+public class TaskOBSConnection implements OBSConnection
 {
-    private static final Logger log = Logger.getLogger(TaskTomcatConnection.class);
+    private static final Logger log = Logger.getLogger(TaskOBSConnection.class);
     // ------------------------------------------------------------------------------------------------------- Constants
     // ------------------------------------------------------------------------------------------------- Type Properties
 
@@ -19,7 +19,7 @@ public class TaskTomcatConnection implements TomcatConnection
     // ---------------------------------------------------------------------------------------------------- Dependencies
     // ---------------------------------------------------------------------------------------------------- Constructors
 
-    public TaskTomcatConnection(@NotNull CommonTaskContext taskContext, final EncryptionService encryptionService)
+    public TaskOBSConnection(@NotNull CommonTaskContext taskContext, final EncryptionService encryptionService)
     {
         this.URL = taskContext.getConfigurationMap().get(DeployAppConfigurator.OBS_URL);
         this.username = taskContext.getConfigurationMap().get(DeployAppConfigurator.OBS_USERNAME);
