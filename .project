@@ -1,0 +1,13 @@
+<projectDescription>
+  <name>obs-trigger</name>
+  <comment>The OBS Build Trigger Plugin adds a task to trigger builds on the openSUSE Open Build Service</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

@@ -1,0 +1,30 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <!-- 
+	note that this plugin has to be a plugins-version '1' plugin as build module types (repositories, tasks, pre/post processors)
+	are plugins v1 only. Module types such as REST, Gadgets, Servlets and Filters are plugins v2 and cannot be mixed in the same
+	plugin as plugins v1 module types for the time being
+  -->
+
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+  </plugin-info>
+
+  <resource type="i18n" name="ac.dynam.bamboo.plugins.obstrigger.i18n" location="ac.dynam.bamboo.plugins.obstrigger.i18n"/>
+
+  <taskType key="TriggerBuild" name="Trigger Build" class="ac.dynam.bamboo.plugins.obstrigger.tasks.TriggerBuild">
+    <description>Triggers a OBS Build</description>
+    <category name="deployment"/>
+    <configuration class="ac.dynam.bamboo.plugins.obstrigger.configuration.DeployAppConfigurator"/>
+    <resource type="freemarker" name="edit" location="ac/dynam/bamboo/plugins/obstrigger/editDeployApp.ftl"/>
+    <resource type="freemarker" name="view" location="ac/dynam/bamboo/plugins/obstrigger/viewDeployApp.ftl"/>
+    <resource type="download" name="icon" location="ac/dynam/bamboo/plugins/obstrigger/tomcat.png"/>
+    <help key="obstrigger.task.help" />
+  </taskType>
+
+<!--  <component key="passwordUpgradeTask" name="Password Encryption Upgrade Task" class="ac.dynam.bamboo.plugins.tomcat.upgrade.PasswordUpgradeTask" public="true">
+    <interface>ac.dynam.sal.api.upgrade.PluginUpgradeTask</interface>
+  </component>
+-->
+</atlassian-plugin>
