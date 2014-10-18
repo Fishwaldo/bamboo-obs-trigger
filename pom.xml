@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ac.dynam.plugins.obstrigger</groupId>
   <artifactId>obs-trigger</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 
   <organization>
     <name>DynamX</name>
@@ -47,7 +47,7 @@
       <plugin>
         <groupId>com.atlassian.maven.plugins</groupId>
         <artifactId>maven-bamboo-plugin</artifactId>
-        <version>3.3</version>
+        <version>5.0.4</version>
         <extensions>true</extensions>
         <configuration>
           <productVersion>${bamboo.version}</productVersion>
@@ -76,7 +76,7 @@
   </build>
 
   <properties>
-    <bamboo.version>5.0</bamboo.version>
+    <bamboo.version>5.6.2</bamboo.version>
     <bamboo.data.version>3.2.2</bamboo.data.version>
   </properties>
 
